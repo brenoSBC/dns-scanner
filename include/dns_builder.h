@@ -52,7 +52,7 @@
 
 void build_dns_header(unsigned char *header);
 
-void build_dns_question(unsigned char *qname, int *question_size, unsigned char *domain);
+void build_dns_question(unsigned char *qname, int *question_size, int *qname_size, unsigned char *domain);
 
 void build_dns_message(unsigned char *message, const unsigned char *header, const unsigned char *question, int *message_pos, int question_size);
 

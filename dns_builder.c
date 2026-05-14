@@ -21,7 +21,7 @@ void build_dns_header(unsigned char *header) {
     header[11] = ARCOUNT_LOW;
 }
 
-void build_dns_question(unsigned char *question, int *question_size, unsigned char *domain) {
+void build_dns_question(unsigned char *question, int *question_size, int *qname_size, unsigned char *domain) {
 
     int pos = 0;
     int len = 0;
@@ -39,6 +39,8 @@ void build_dns_question(unsigned char *question, int *question_size, unsigned ch
     }
     question[len_pos] = len;
     question[pos++] = 0;
+
+    *qname_size = pos;
 
     question[pos++] = QTYPE_HIGH;
     question[pos++] = QTYPE_LOW;

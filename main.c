@@ -12,10 +12,11 @@ int main(int argc, char *argv[]) {
     unsigned char message[524];
 
     int question_size = 0;
+    int qname_size = 0;
     int message_pos = 0;
 
     build_dns_header(header);
-    build_dns_question(question, &question_size, domain);
+    build_dns_question(question, &question_size, &qname_size, domain);
     build_dns_message(message, header, question, &message_pos, question_size);
 
     int sockfd = create_dns_socket();
@@ -26,7 +27,7 @@ int main(int argc, char *argv[]) {
 
     printf("Recebi %d bytes\n", received);
 
-    parser_response(response);
+    parser_dns_response(response, qname_size);
 
     // close(sockfd);
   
