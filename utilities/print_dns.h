@@ -3,22 +3,23 @@
 
 #include "../include/dns_parser.h"
 
-static inline void print_dns(DNS_ANSWER dns_answer, int qname_size) {
+static inline void print_dns(DNS_ANSWER dns_answer, int qname_size, unsigned char *dns_servers) {
 
     printf("\n================ DNS RESPONSE ================\n");
 
-    printf("\n[HEADER]");
+    printf("\nDNS SERVER: %s", dns_servers);
+
+    printf("\n\n[HEADER]");
     printf("\nID       : %d", dns_answer.id);
     printf("\nQR       : %d", dns_answer.qr);
     printf("\nRCODE    : %d", dns_answer.rcode);
-    printf("\nQDCOUNT (Quantidade de Questions): %d", dns_answer.qdcount);
-    printf("\nANCOUNT (Quantidade de dns_answers)  : %d", dns_answer.ancount);
+    printf("\nQDCOUNT  : %d", dns_answer.qdcount);
+    printf("\nANCOUNT  : %d", dns_answer.ancount);
 
     printf("\n\n[QUESTION]");
     printf("\nQNAME    : ");
-
     for(int i = 0; i < qname_size; i++) printf("%u ", dns_answer.qname[i]);
-    printf("\nQTYPE(A)    : %d", dns_answer.qtype);
+    printf("\nQTYPE    : %d", dns_answer.qtype);
 
     if(dns_answer.rcode == 0 && dns_answer.ancount > 0) {
 
