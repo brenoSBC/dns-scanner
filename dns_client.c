@@ -7,6 +7,17 @@ int create_dns_socket() {
         perror("socket error");
         exit(EXIT_FAILURE);
     }
+
+    struct timeval timeout;
+
+    timeout.tv_sec = 2;
+    timeout.tv_usec = 0;
+
+    // SOL_SOCKET "estou configurando algo geral do socket"
+    // SO_RCVTIMEO "receive timeout" "tempo máximo esperando receber"
+    // struct timeval tv_sec Segundos.tv_usec Microsegundos.
+    setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)); // setsockopt(socket, nível, opção, valor, tamanho)
+
     return sockfd;
 }
 
@@ -37,6 +48,13 @@ int recv_dns_message(int sockfd, unsigned char *response) {
     int recv_bytes = recvfrom(sockfd, response, BUFSIZE, 0, (struct sockaddr *)&server_addr, &server_len);
 
     if(recv_bytes < 0) {
+
+        // quando timeout acontece errno == EAGAIN ou errno == EWOULDBLOCK
+        if(errno == EAGAIN || errno == EWOULDBLOCK) {
+            printf("\nTimeout: Server DNS não respondeu.\n");
+            return -1;
+        }
+
         perror("recvfrom");
         close(sockfd);
         exit(EXIT_FAILURE);

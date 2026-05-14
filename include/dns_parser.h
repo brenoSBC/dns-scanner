@@ -33,7 +33,7 @@ typedef struct {
     int name1;
     int name2;
     int type;
-    int class;
+    int dns_class;
     int ttl;
     int rdlength;
     
