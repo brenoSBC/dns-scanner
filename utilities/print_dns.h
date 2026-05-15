@@ -3,11 +3,12 @@
 
 #include "../include/dns_parser.h"
 
-static inline void print_dns(DNS_ANSWER dns_answer, int qname_size, unsigned char *dns_servers) {
+static inline void print_dns(DNS_ANSWER dns_answer, int qname_size, unsigned char *dns_servers, double elapsed_time) {
 
-    printf("\n================ DNS RESPONSE ================\n");
+    printf("\n============ DNS RESPONSE ============\n");
 
-    printf("\nDNS SERVER: %s", dns_servers);
+    printf("\nServer: %s", dns_servers);
+    printf("\nTime: %f", elapsed_time);
 
     printf("\n\n[HEADER]");
     printf("\nID       : %d", dns_answer.id);
@@ -29,7 +30,8 @@ static inline void print_dns(DNS_ANSWER dns_answer, int qname_size, unsigned cha
             printf("\nIPs:");
 
             for(int i = 0; i < dns_answer.ip_count; i++) {
-                printf("\n- %d.%d.%d.%d",
+                printf("\n%d: %d.%d.%d.%d",
+                    i,
                     dns_answer.ips[i][0],
                     dns_answer.ips[i][1],
                     dns_answer.ips[i][2],
@@ -38,7 +40,7 @@ static inline void print_dns(DNS_ANSWER dns_answer, int qname_size, unsigned cha
         }
     }
 
-    printf("\n\n==============================================\n");
+    printf("\n\n======================================\n");
 
 }
 
