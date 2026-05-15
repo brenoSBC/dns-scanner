@@ -4,13 +4,13 @@
 #include "include/dns_builder.h"
 #include "include/dns_client.h"
 #include "include/dns_parser.h"
-#include "utilities/print_dns.h"
+#include "include/utilities.h"
 
 int servers_count = 4;
 
 char *dns_servers[] = {
-    "8.8.8.8",       // google
-    "9.9.9.9",       // Quad9
+    "9.9.9.9",       // google
+    "8.8.8.8",       // Quad9
     "1.1.1.1",       // CloudFare
     "208.67.222.222" // OpenDNS
 };
@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
         int question_size = 0;
         int qname_size = 0;
         int message_pos = 0;
-        DNS_ANSWER dns_answer;
+        DNS_ANSWER dns_answer = {0};
         struct timespec start, end;
 
         build_dns_header(header);
@@ -57,3 +57,12 @@ int main(int argc, char *argv[]) {
     }
     return 0;
 }
+
+
+/*
+        dns_answer.ips[1][0] = 0;
+        dns_answer.ips[1][1] = 0;
+        dns_answer.ips[1][2] = 0;
+        dns_answer.ips[1][3] = 0;
+        
+*/
