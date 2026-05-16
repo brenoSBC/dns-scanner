@@ -1,5 +1,7 @@
 #include "include/utilities.h"
 
+#include "include/dns_client.h"
+
 int detect_null_ip(DNS_ANSWER dns_answer, int index) {
 
     if(
@@ -89,4 +91,85 @@ void print_dns(DNS_ANSWER dns_answer, int qname_size, unsigned char *dns_servers
 
     printf("\n\n======================================\n");
 
+}
+
+
+void benchmark_dns_servers(int servers_count, char *dns_servers[], unsigned char *domain) {
+
+    printf("\n==============================\n");
+    printf("DNS BENCHMARK (%d QUERIES)\n", 10);
+    printf("==============================\n\n");
+
+    for(int i = 0; i < servers_count; i++) {
+
+        double total_time = 0.0;
+        double min_time = DBL_MAX;
+        double max_time = 0.0;
+
+        int success = 0;
+        int failed = 0;
+
+        for(int j = 0; j < 10; j++) {
+
+            unsigned char header[12];
+            unsigned char question[512];
+            unsigned char message[524];
+            unsigned char response[BUFSIZE];
+
+            int question_size = 0;
+            int qname_size = 0;
+            int message_pos = 0;
+
+            struct timespec start, end;
+
+            build_dns_header(header);
+            build_dns_question(question, &question_size, &qname_size, domain);
+            build_dns_message(message, header, question, &message_pos, question_size);
+
+            int sockfd = create_dns_socket();
+
+            clock_gettime(CLOCK_MONOTONIC, &start);
+
+            send_dns_message(sockfd, message, message_pos, dns_servers[i]);
+
+            int received = recv_dns_message(sockfd, response);
+
+            clock_gettime(CLOCK_MONOTONIC, &end);
+
+            close(sockfd);
+
+            if(received < 0) {
+                failed++;
+                continue;
+            }
+
+            double elapsed_time =
+                (end.tv_sec - start.tv_sec) * 1000.0 +
+                (end.tv_nsec - start.tv_nsec) / 1000000.0;
+
+            total_time += elapsed_time;
+
+            if(elapsed_time < min_time) min_time = elapsed_time;
+
+            if(elapsed_time > max_time) max_time = elapsed_time;
+
+            success++;
+        }
+
+        double avg_time = 0.0;
+
+        if(success > 0) avg_time = total_time / success;
+
+        double loss = ((double)failed / 10) * 100.0;
+
+        printf("Server: %s\n", dns_servers[i]);
+
+        printf("AVG TIME : %.2f ms\n", avg_time);
+        printf("MIN TIME : %.2f ms\n", min_time);
+        printf("MAX TIME : %.2f ms\n", max_time);
+
+        printf("LOSS: %.1f%%\n", loss);
+
+        printf("------------------------------\n");
+    }
 }
