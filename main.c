@@ -6,7 +6,7 @@
 #include "include/dns_parser.h"
 #include "include/utilities.h"
 
-int servers_count = 16;
+int servers_count = 19;
 
 char *dns_servers[] = {
 
@@ -33,8 +33,11 @@ char *dns_servers[] = {
     "94.140.14.15",   // AdGuard Family
 
     // Extras
-    "76.76.2.0",      // Control D
-    "189.38.95.96"    // GigaDNS
+    "76.76.2.0",       // Control D
+    "8.26.56.26",      // Comodo Secure
+    "189.38.95.96",    // GigaDNS
+    "127.0.0.53",      // DNS no resolv.conf
+    "201.21.192.112"  // Claro
 };
 
 int main(int argc, char *argv[]) {
@@ -62,7 +65,7 @@ int main(int argc, char *argv[]) {
         clock_gettime(CLOCK_MONOTONIC, &start);
 
         send_dns_message(sockfd, message, message_pos, dns_servers[i]);
-        int received = recv_dns_message(sockfd, response);
+        int received = recv_dns_message(sockfd, response, dns_servers[i]);
 
         clock_gettime(CLOCK_MONOTONIC, &end);
 

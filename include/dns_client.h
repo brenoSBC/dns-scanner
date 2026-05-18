@@ -21,6 +21,6 @@ int create_dns_socket();
 
 void send_dns_message(int sockfd, const unsigned char *message, int message_size, const char *server_ip);
 
-int recv_dns_message(int sockfd, unsigned char *response);
+int recv_dns_message(int sockfd, unsigned char *response, char *dns_servers);
 
 #endif

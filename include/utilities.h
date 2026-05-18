@@ -18,7 +18,8 @@ int detect_null_ip(DNS_ANSWER dns_answer, int index);
 
 int detect_divergent_ip(DNS_ANSWER dns_answer, int index);
 
-void print_dns(DNS_ANSWER dns_answer, int qname_size, unsigned char *dns_servers, double elapsed_time);
+void print_dns(DNS_ANSWER dns_answer, int qname_size, char *dns_servers, double elapsed_time);
 
 void benchmark_dns_servers(int servers_count, char *dns_servers[], unsigned char *domain);
+
 #endif

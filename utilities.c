@@ -34,7 +34,7 @@ int detect_refused(DNS_ANSWER dns_answer) {
 }
 
 
-void print_dns(DNS_ANSWER dns_answer, int qname_size, unsigned char *dns_servers, double elapsed_time) {
+void print_dns(DNS_ANSWER dns_answer, int qname_size, char *dns_servers, double elapsed_time) {
 
     printf("\n============ DNS RESPONSE ============\n");
 
@@ -132,7 +132,7 @@ void benchmark_dns_servers(int servers_count, char *dns_servers[], unsigned char
 
             send_dns_message(sockfd, message, message_pos, dns_servers[i]);
 
-            int received = recv_dns_message(sockfd, response);
+            int received = recv_dns_message(sockfd, response, dns_servers[i]);
 
             clock_gettime(CLOCK_MONOTONIC, &end);
 

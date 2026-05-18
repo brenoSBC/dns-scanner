@@ -40,7 +40,7 @@ void send_dns_message(int sockfd, const unsigned char *message, int message_size
     }
 }
 
-int recv_dns_message(int sockfd, unsigned char *response) {
+int recv_dns_message(int sockfd, unsigned char *response, char *dns_servers) {
 
     struct sockaddr_in server_addr;
     socklen_t server_len = sizeof(server_addr);
@@ -51,7 +51,7 @@ int recv_dns_message(int sockfd, unsigned char *response) {
 
         // quando timeout acontece errno == EAGAIN ou errno == EWOULDBLOCK
         if(errno == EAGAIN || errno == EWOULDBLOCK) {
-            printf("\nTimeout: Server DNS não respondeu.\n");
+            printf("\nTimeout: Server DNS não respondeu: %s.\n", dns_servers);
             return -1;
         }
 
